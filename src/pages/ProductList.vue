@@ -1,4 +1,6 @@
 <template>
+<div class="list-container">
+  <cart-widget></cart-widget>
   <div class="product-list">
     <product-card
       :product="product"
@@ -8,15 +10,19 @@
       @click="gotoProduct(product)"
     ></product-card>
   </div>
+</div>
+
 </template>
 <script>
 import axios from "axios";
 import ProductCard from "../components/ProductCard.vue";
+import CartWidget from "../components/CartWidget.vue";
 
 export default {
   name: "ProductList",
   components: {
     ProductCard,
+    CartWidget
   },
   data() {
     return {
@@ -45,6 +51,12 @@ export default {
 };
 </script>
 <style scoped>
+.list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
 .product-list {
   display: flex;
   flex-wrap: wrap;

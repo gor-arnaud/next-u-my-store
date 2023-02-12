@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import ProductList from '../pages/ProductList';
 import Product from '../pages/Product';
+import Cart from '../pages/Cart';
 
 Vue.use(Router);
 
@@ -20,11 +21,11 @@ const router = new Router({
             component: Product,
             props: route => { return { productId: Number.parseInt(route.params.id) } }
         },
-        // {
-        //     path: '/cart',
-        //     name: 'cart',
-        //     component: Cart,
-        // }
+        {
+            path: '/cart',
+            name: 'cart',
+            component: Cart,
+        }
     ]
 });
 

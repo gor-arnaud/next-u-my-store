@@ -20,24 +20,23 @@ export default {
     };
   },
   props: {
-    product: {
-      type: Object,
-      default: () => null,
-    },
+    productId: {
+      type: String,
+      default: ""
+    }
   },
   computed: {
+    cartItem: function() {
+        return this.$store.getters.getCartItem(this.productId);
+    },
     quantityInCart: function () {
-      const cartItem = this.$store.getters.getCartItem();
-
-      if (cartItem) return cartItem.quantity;
-
-      return 0;
+      return this.cartItem?.productQuantity ?? 0;
     },
   },
   methods: {
     updateQuantityInCart: function (newValue) {
       this.$store.dispatch("updateProductOrderedQuantity", {
-        product: this.product,
+        productId: this.productId,
         quantity: newValue,
       });
     },
