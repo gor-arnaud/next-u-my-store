@@ -1,14 +1,14 @@
 <template>
   <div class="item-container">
     <figure class="image is-64x64">
-      <img :src="item.productThumbnail" />
+      <img :src="item?.productThumbnail" />
     </figure>
     <div class="details-container">
-      <div><label>Référence : </label><span>{{ item.productId }}</span></div>
-      <div><label>Nom : </label><span>{{ item.productTitle }}</span></div>
+      <div><label>Référence : </label><span>{{ item?.productId }}</span></div>
+      <div><label>Nom : </label><span>{{ item?.productTitle }}</span></div>
     </div>
     <div class="price-container">
-        <product-price-block :productId="item.productId"></product-price-block>
+        <product-price-block :product="item?.productId"></product-price-block>
     </div>
   </div>
 </template>

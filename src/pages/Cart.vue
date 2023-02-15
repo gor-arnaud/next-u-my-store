@@ -1,10 +1,16 @@
 <template>
-  <div class="items-container">
-    <cart-item
-      v-for="item in cart"
-      :item="item"
-      :key="item.productId"
-    ></cart-item>
+  <div>
+    <div class="toolbar">
+      <router-link :to="{ path: '/' }">&lt;&nbsp;Retour</router-link>
+    </div>
+    <div class="items-container">
+      <h2 v-if="isNullOrEmptyCart">Votre panier est vide.</h2>
+      <cart-item
+        v-for="item in cart"
+        :item="item"
+        :key="item.productId"
+      ></cart-item>
+    </div>
   </div>
 </template>
 <script>
@@ -19,6 +25,9 @@ export default {
     cart: function () {
       return this.$store.state.cart;
     },
+    isNullOrEmptyCart: function() {
+      return this.$store.getters.isNullOrEmptyCart;
+    }
   },
 };
 </script>

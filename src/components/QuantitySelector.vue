@@ -4,7 +4,8 @@
       <span class="icon is-small">
         <i class="mdi mdi-minus"></i>
       </span></button
-    ><input type="text" v-model="quantity" /><button @click="incrementQuantity">
+    ><input type="text" :value="quantity" @change="validateInputQuantity" />
+    <button @click="incrementQuantity">
       <span class="icon is-small">
         <i class="mdi mdi-plus"></i>
       </span>
@@ -20,36 +21,58 @@ export default {
     };
   },
   props: {
-    productId: {
-      type: String,
-      default: ""
+    product: {
+      type: [Number, Object],
+      default: 0
     }
   },
   computed: {
+    productId: function () {
+      return (typeof this.product === 'object') ? this.product?.id : this.product;
+    },
     cartItem: function() {
         return this.$store.getters.getCartItem(this.productId);
     },
     quantityInCart: function () {
-      return this.cartItem?.productQuantity ?? 0;
+      return this.cartItem?.productQuantity || 0;
     },
   },
   methods: {
+    validateInputQuantity: function(event) {
+      const newQuantity = parseInt(event.target.value);
+
+      if (this.confirmNewQuantity(newQuantity))
+        this.quantity = newQuantity;
+      else {
+        event.target.value = this.cartItem?.productQuantity;
+        event.preventDefault();
+      }
+    },
+    confirmNewQuantity: function(quantity) {
+      if (quantity === 0 && !window.confirm('Voulez-vous supprimer ce produit du panier ?'))
+        return false;
+
+      this.quantity = quantity;
+      return true;
+    },
     updateQuantityInCart: function (newValue) {
       this.$store.dispatch("updateProductOrderedQuantity", {
-        productId: this.productId,
+        product: this.product,
         quantity: newValue,
       });
     },
     incrementQuantity: function () {
-      this.quantity++;
+      this.confirmNewQuantity(this.quantity + 1);
     },
     decrementQuantity: function () {
-      this.quantity--;
+      this.confirmNewQuantity(this.quantity - 1);
     },
   },
   watch: {
-    quantity: function (newValue) {
-      this.updateQuantityInCart(newValue);
+    quantity: function (newValue, oldValue) {
+      console.log(`quantity change old:${oldValue} new:${newValue}`);
+      if (oldValue || newValue !== 0)
+        this.updateQuantityInCart(newValue);
     },
     quantityInCart: function (newValue) {
       this.quantity = newValue;

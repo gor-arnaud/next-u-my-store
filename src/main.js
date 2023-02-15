@@ -5,6 +5,8 @@ import router from './router';
 
 Vue.config.productionTip = false
 
+store.commit('GET_CART');
+
 new Vue({
   store,
   router,

@@ -1,8 +1,8 @@
 <template>
   <div class="block-container">
-    <label>Prix unitaire</label><span>{{ item.productPrice }}</span>
+    <label>Prix unitaire</label><span>{{ cartItem?.productPrice }}</span>
     <quantity-selector
-      :productId="productId"
+      :product="product"
       class="quantity-container"
     ></quantity-selector>
     <label>Sous-total</label><span>{{ subtotal }}</span>
@@ -15,20 +15,23 @@ export default {
   name: "ProductPriceBlock",
   components: { QuantitySelector },
   props: {
-    productId: {
-      type: String,
-      default: "",
+    product: {
+      type: [Number, Object],
+      default: 0,
     }
   },
   computed: {
+    productId: function () {
+      return (typeof this.product === 'object') ? this.product?.id : this.product;
+    },
     cartItem: function () {
       return this.$store.getters.getCartItem(this.productId);
     },
     quantity: function () {
-      return this.item?.productQuantity ?? 0;
+      return this.cartItem?.productQuantity || 0;
     },
     subtotal: function () {
-      return this.item?.productSubTotal ?? 0;
+      return this.cartItem?.productSubTotal || 0;
     },
   },
 };

@@ -27,7 +27,7 @@
       </div>
     </div>
     <div>
-      <product-price-block :productId="product.id"></product-price-block>
+      <product-price-block :product="product"></product-price-block>
     </div>
   </div>
 </template>

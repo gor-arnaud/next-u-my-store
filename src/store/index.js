@@ -1,25 +1,28 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import createPersistencePlugin from "./plugins/persistencePlugin";
+import createPersistencePlugin from "./plugins/persistencePlugin";
 
 const isProductInCart = (state, productId) => {
-    return state.cart.findIndex(item => item.productId === productId) !== -1;
+    return state.cart.some(item => item.productId === productId);
 }
 
 const getCartItem = (state, productId) => {
-    return state.cart.find(item => item.productId === productId);
+    return state.cart?.find(item => item.productId === productId);
 }
 
 Vue.use(Vuex);
 
-// const persistencePlugin = createPersistencePlugin();
+const persistencePlugin = createPersistencePlugin();
 
 export default new Vuex.Store({
     state: {
         cart: []
     },
-    // plugins: [persistencePlugin],
+    plugins: [persistencePlugin],
     getters: {
+        isNullOrEmptyCart: (state) => {
+            return (state.cart?.length || 0) === 0;
+        },
         isProductInCart: (state) => (productId) => {
             return isProductInCart(state, productId);
         },
@@ -34,6 +37,10 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        GET_CART: () => {},
+        SET_CART: (state, cart) => {
+            state.cart = cart;
+        },
         ADD_PRODUCT_TO_CART: (state, payload) => {
             const cartItem = {
                 productId: payload.product.id,
@@ -63,16 +70,17 @@ export default new Vuex.Store({
     },
     actions: {
         updateProductOrderedQuantity: ({ getters, commit }, payload) => {
-            const isInCart = getters.isProductInCart(payload.productId);
+            const productId = (typeof payload.product === 'object') ? payload.product.id : payload.product;
+            const isInCart = getters.isProductInCart(productId);
 
             if (payload.quantity === 0) {
                 if (isInCart)
-                    commit('REMOVE_PRODUCT_FROM_CART', { productId: payload.productId })
+                    commit('REMOVE_PRODUCT_FROM_CART', { productId: productId })
             } else {
                 if (isInCart)
-                    commit('UPDATE_PRODUCT_IN_CART', { productId: payload.productId, quantity: payload.quantity });
+                    commit('UPDATE_PRODUCT_IN_CART', { productId: productId, quantity: payload.quantity });
                 else
-                    commit('ADD_PRODUCT_TO_CART', { productId: payload.productId, quantity: payload.quantity });
+                    commit('ADD_PRODUCT_TO_CART', { product: payload.product, quantity: payload.quantity });
             }
         }
     }
