@@ -5,13 +5,16 @@
   "scripts": {
     "serve": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build_win": "SET NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "start": "node server.js"
   },
   "dependencies": {
     "@creativebulma/bulma-badge": "^1.0.1",
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
     "core-js": "^3.6.5",
+    "express": "^4.18.2",
     "vue": "^2.6.11",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
